@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"net/mail"
 
 	"invitation-service/internal/domain"
@@ -19,6 +19,7 @@ func NewInvitationService(repo repository.InvitationRepository) InvitationServic
 
 func (s *invitationService) UseInvitation(ctx context.Context, code, email string) error {
 	if err := validateEmail(email); err != nil {
+		log.Printf("invalid email attempt: %q", email) // детали только в логах, наружу уходит только domain.ErrInvalidEmail
 		return err
 	}
 	return s.repo.Use(ctx, code, email)
@@ -29,5 +30,5 @@ func validateEmail(email string) error {
 	if err == nil && addr.Address == email {
 		return nil
 	}
-	return fmt.Errorf("%w: %s", domain.ErrInvalidEmail, email)
+	return domain.ErrInvalidEmail
 }
