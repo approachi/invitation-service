@@ -17,17 +17,16 @@ test-unit:
 .PHONY: test-integration
 test-integration:
 	@echo "Starting test database..."
-	@docker-compose up -d postgres-test
+	@docker-compose up -d --wait postgres-test
 	@echo "Running integration tests..."
 	@TEST_DATABASE_URL=$(TEST_DATABASE_URL) go test -count=1 ./internal/repository/... ; \
 	EXIT_CODE=$$? ; \
-	docker-compose stop postgres-test ; \
+	docker-compose rm -sf postgres-test ; \
 	echo "Integration tests done." ; \
 	exit $$EXIT_CODE
 
 .PHONY: test
 test: test-unit test-integration
-
 
 .PHONY: down
 down:

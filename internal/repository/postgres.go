@@ -11,6 +11,9 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+
+// TODO в production ready можно заменить на переменную из pgerrcode,
+// если будет надобность в других ошибках pg
 const pgErrUniqueViolation = "23505"
 
 type PostgresRepository struct {
